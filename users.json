@@ -1,0 +1,22 @@
+[
+  {
+    "username": "nash",
+    "discordRole": "Admin",
+    "discordId": "1089991680649863328",
+    "productName": "Software",
+    "hwid": "f1d62c2f9dbfc98420aa04bc605720741d42d0f8b8aaf1ae34956de55ab97919",
+    "ip": "127.0.0.1",
+    "key": "VSYNC-HAXGOWDWUWP7TZ4Z8E8HVCM1",
+    "validUntil": "2051-11-07T00:16:39.477Z"
+  },
+  {
+    "username": "lukzin",
+    "discordRole": "Admin",
+    "discordId": "1162785164116631693",
+    "productName": "Software",
+    "hwid": "",
+    "ip": "0.0.0.0",
+    "key": "VSYNC-EO2J4EB62NEQMNOS7RRJ7TT5",
+    "validUntil": "2051-11-07T00:16:57.183Z"
+  }
+]

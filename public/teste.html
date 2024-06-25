@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vsync Dashboard</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #0e0e0e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column; /* Para alinhar os contêineres na vertical */
+    }
+    .container {
+        width: 60%;
+        background-color: #131313;
+        padding: 30px;
+        border-radius: 3px;
+        right: 200px;
+        color: #fff;
+        margin-bottom: 10px; /* Reduzindo a margem inferior entre os containers */
+        position: relative; /* Para posicionar o botão relativo a este container */
+        box-shadow: 0 4px 8px rgba(51, 51, 51, 0.1); /* Adicionando sombra */
+        height: calc(98% - 515px);
+    }
+    
+    h1 {
+        font-size: 20px;
+        margin: 0 0 10px 0;
+    }
+    h2 {
+        font-size: 20px;
+        color: #7e7e7e;
+        margin: 5px 0 20px 120px;
+    }
+    .fields-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .field {
+        width: calc(33.33% - 10px);
+        padding: 10px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+    .field-title {
+        font-size: 12px;
+        color: #888;
+        margin-bottom: 5px;
+    }
+    .icon {
+        width: 20px;
+        height: auto;
+        fill: #fff;
+        margin-right: 5px;
+    }
+    .field-value {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+    .field-content {
+        display: flex;
+        align-items: center;
+        position: relative; /* Para que os ícones possam ser posicionados relativamente */
+    }
+    input[type="text"] {
+        width: calc(100% - 22px); /* Ajustando o tamanho do input */
+        padding: 8px; /* Ajustando o padding */
+        margin-top: 5px;
+        border-radius: 0%;
+        border: 1px solid #2e2e2e; /* Alterando a cor da borda */
+        background-color: #2b2b2b; /* Alterando a cor de fundo */
+        color: #ccc; /* Alterando a cor do texto */
+        font-size: 14px; /* Reduzindo o tamanho da fonte */
+        transition: box-shadow 0.3s ease; /* Adicionando transição suave */
+    }
+    input[type="text"]:hover,
+    input[type="text"]:focus {
+        box-shadow: 0 0 5px rgba(68, 68, 68, 0.5); /* Adicionando sombra ao passar o mouse ou focar */
+    }
+    button {
+        position: absolute; /* Posicionamento absoluto */
+        bottom: 35px; /* Distância do topo */
+        right: 10px; /* Distância da direita */
+        padding: 10px 20px; /* Adicionando um espaçamento interno */
+        background-color: #666; /* Cor de fundo */
+        color: #fff; /* Cor do texto */
+        border: none; /* Removendo a borda */
+        border-radius: 4px; /* Borda arredondada */
+        cursor: pointer; /* Cursor ao passar */
+        transform: translate(-50%, -50%); /* Centralizando o botão */
+        transition: background-color 0.3s ease; /* Adicionando transição suave */
+        box-shadow: 0 0 3px #3f3f3f; /* Adicionando sombra */
+    }
+    button:hover {
+        background-color: #555; /* Alterando a cor de fundo ao passar o mouse */
+        animation: glow 1s infinite alternate; /* Adicionando animação de brilho */
+    }
+
+    @keyframes glow {
+        from {
+            box-shadow: 0 0 3px #1f1f1f, 0 0 6px #1f1f1f, 0 0 9px #1f1f1f, 0 0 12px #1f1f1f, 0 0 15px #1f1f1f, 0 0 18px #1f1f1f, 0 0 21px #1f1f1f;
+        }
+        to {
+            box-shadow: 0 0 6px #1f1f1f, 0 0 9px #1f1f1f, 0 0 12px #1f1f1f, 0 0 15px #1f1f1f, 0 0 18px #1f1f1f, 0 0 21px #1f1f1f, 0 0 24px #1f1f1f;
+        }
+    }
+    button2 {
+        position: absolute; /* Posicionamento absoluto */
+        bottom: 2px; /* Distância do topo */
+        right: -97px; /* Distância da direita */
+        padding: 10px 100px; /* Adicionando um espaçamento interno */
+        background-color: #666; /* Cor de fundo */
+        color: #fff; /* Cor do texto */
+        border: none; /* Removendo a borda */
+        border-radius: 4px; /* Borda arredondada */
+        cursor: pointer; /* Cursor ao passar */
+        transform: translate(-50%, -50%); /* Centralizando o botão */
+        transition: background-color 0.3s ease; /* Adicionando transição suave */
+        box-shadow: 0 0 3px #3f3f3f; /* Adicionando sombra */
+    }
+    button2:hover {
+        background-color: #555; /* Alterando a cor de fundo ao passar o mouse */
+        animation: glow 1s infinite alternate; /* Adicionando animação de brilho */
+    }
+
+    @keyframes glow {
+        from {
+            box-shadow: 0 0 3px #1f1f1f, 0 0 6px #1f1f1f, 0 0 9px #1f1f1f, 0 0 12px #1f1f1f, 0 0 15px #1f1f1f, 0 0 18px #1f1f1f, 0 0 21px #1f1f1f;
+        }
+        to {
+            box-shadow: 0 0 6px #1f1f1f, 0 0 9px #1f1f1f, 0 0 12px #1f1f1f, 0 0 15px #1f1f1f, 0 0 18px #1f1f1f, 0 0 21px #1f1f1f, 0 0 24px #1f1f1f;
+        }
+    }
+
+    .profile-container {
+        width: 20%;
+        background-color: #131313;
+        padding: 20px;
+        border-radius: 3px;
+        color: #fff;
+        position: absolute;
+        right: 120px;
+        top: 233px;
+        height: calc(100% - 515px); /* Definindo a altura dinamicamente */
+        box-shadow: 0 4px 8px rgba(68, 68, 68, 0.1); /* Adicionando sombra */
+    }
+    .user-icon {
+     
+        width: 200px;
+        height: 200px;
+        right: -90px;
+        top: 20px;
+        position: relative;
+        fill: #fff;
+        margin-bottom: 10px;
+    }
+    .user-icon-fill {
+    fill: #525252;
+
+.user-icon-img {
+  
+}
+
+}
+.field2 {
+    
+        width: calc(100% - 15px);
+        padding: 0px;
+        top: 25px;
+        right: -35px;
+        position: relative;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+.field2-title {
+        font-size: 13px;
+        color: #ffffff;
+        margin-bottom: 1px;
+    }
+         .wrapper {
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                    }
+
+.field2-value {
+    color: #888;
+        font-size: 14px;
+        margin-top: 1px;
+         position: relative;
+    }
+    canvas {
+                        display: block;
+                        vertical-align: bottom;
+                    }
+            
+                    #particles-js {
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        background-color: #0e0e0e;
+                        background-image: url("");
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                        background-position: 50% 50%;
+                    }
+            
+                    .count-particles {
+                        background: #000022;
+                        position: absolute;
+                        top: 48px;
+                        left: 0;
+                        width: 80px;
+                        color: #000000;
+                        font-size: .8em;
+                        text-align: left;
+                        text-indent: 4px;
+                        line-height: 14px;
+                        padding-bottom: 2px;
+                        font-family: Helvetica, Arial, sans-serif;
+                        font-weight: bold;
+                    }
+            
+                    .js-count-particles {
+                        font-size: 1.1em;
+                    }
+            
+                    #stats,
+                    .count-particles {
+                        -webkit-user-select: none;
+                    }
+            
+                    #stats {
+                        border-radius: 3px 3px 0 0;
+                        overflow: hidden;
+                    }
+            
+                    .count-particles {
+                        border-radius: 0 0 3px 3px;
+                    }
+                    .user-icon-img {
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        display: none;
+        position: relative;
+        right: -90px;
+        top: 20px;
+    }
+       .swal2-popup {
+    background: #0f0f0f !important;
+    border-radius: 5px;
+    width: 500px;
+    height: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.swal2-title {
+    color: #fff !important;
+}
+
+.swal2-input {
+    background: #252525 !important;
+    border-radius: 5px;
+    color: #fff !important;
+    border: 1px solid #0f0f0f; /* Adicionando borda ao input */
+}
+
+.swal2-confirm {
+    background: #fff !important;
+    color: #000 !important;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    border-radius: 5px;
+    border: 1px solid #0f0f0f; /* Adicionando borda ao botão */
+}
+
+.swal2-cancel {
+    margin-right: 5px;
+    background: #252525 !important;
+    color: #ffffff !important;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    border-radius: 5px;
+    border: 1px solid #0f0f0f; /* Adicionando borda ao botão */
+}
+
+.message-box {
+        position: fixed;
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #131313;
+        color: white;
+        padding: 1px 100px;
+        border-radius: 12px;
+        box-shadow: 0 4px 4px rgba(51, 51, 51, 0.1);
+        z-index: 1000;
+        opacity: 0; /* Inicialmente invisível */
+        transition: opacity 0.5s; /* Transição de opacidade */
+    }
+
+.message-input {
+    position: relative;
+    display: block;
+    margin-top: 50px;
+    width: calc(100% - 50px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    right: -10px;
+    top: -20px;
+    box-sizing: border-box;
+    background-color: #2b2b2b; /* Alterando a cor de fundo */
+        color: #ccc; /* Alterando a cor do texto */
+        font-size: 14px; /* Reduzindo o tamanho da fonte */
+        transition: box-shadow 0.3s ease; /* Adicionando transição suave */
+
+}
+        .message-input:hover,
+    .message-input:focus {
+        box-shadow: 0 0 5px rgba(68, 68, 68, 0.5); /* Adicionando sombra ao passar o mouse ou focar */
+    }
+    .message-text {
+        color: #888;
+        position: relative;
+        top: 1px;
+    text-align: center;
+}
+.message-button {
+        position: relative; /* Posicionamento absoluto */
+        right: -163px;
+        top: 10px;
+        padding: 10px 108px; /* Adicionando um espaçamento interno */
+        background-color: #666; /* Cor de fundo */
+        color: #fff; /* Cor do texto */
+        border: none; /* Removendo a borda */
+        border-radius: 4px; /* Borda arredondada */
+        cursor: pointer; /* Cursor ao passar */
+        transform: translate(-50%, -50%); /* Centralizando o botão */
+        transition: background-color 0.3s ease; /* Adicionando transição suave */
+        box-shadow: 0 0 3px #3f3f3f; /* Adicionando sombra */
+    }
+    message-button:hover {
+        background-color: #555; /* Alterando a cor de fundo ao passar o mouse */
+        animation: glow 1s infinite alternate; /* Adicionando animação de brilho */
+    }
+
+   .truncated-text {
+    /* Limita o tamanho do texto a 12 caracteres */
+    max-width: calc(100% - 30px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+}
+
+.truncated-text::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: inherit;
+    filter: blur(4px); /* Ajuste o valor do desfoque conforme necessário */
+}
+
+
+    @keyframes glow {
+        from {
+            box-shadow: 0 0 3px #1f1f1f, 0 0 6px #1f1f1f, 0 0 9px #1f1f1f, 0 0 12px #1f1f1f, 0 0 15px #1f1f1f, 0 0 18px #1f1f1f, 0 0 21px #1f1f1f;
+        }
+        to {
+            box-shadow: 0 0 6px #1f1f1f, 0 0 9px #1f1f1f, 0 0 12px #1f1f1f, 0 0 15px #1f1f1f, 0 0 18px #1f1f1f, 0 0 21px #1f1f1f, 0 0 24px #1f1f1f;
+        }
+    }
+        
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+    <div id="particles-js"></div>
+   
+    <div id="user-list" class="container">
+        <h1>Vsync Users</h1>
+        <div class="fields-container">
+            <!-- Os dados dos usuários serão inseridos aqui -->
+        </div>
+    </div>
+
+        
+    </div>
+    
+</div>
+<div class="profile-container">
+    <h2>Vsync Profile</h2>
+<svg class="user-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="50" />
+    <path d="M50 55c-9.7 0-18.2 5-23.3 12.5 6 7.6 15.3 12.5 25.8 12.5s19.8-4.9 25.8-12.5C68.2 60 59.7 55 50 55z"/>
+    <circle cx="50" cy="35" r="15"/>
+</svg>
+<img src="" />
+
+    <div class="field2">
+    <div class="field2-title">Access Key:</div>
+    <div class="field2-value">
+        <span class="truncated-text">${license.key.substr(0, 24) + '...'}</span>
+    </div>
+</div>
+
+
+
+    <div class="field2">
+        <div class="field2-title">Discord Secret:</div>
+        <div class="field2-value">${hwid}</div>
+    </div>
+    <div class="field2">
+        <div class="field2-title">IP Address:</div>
+        <div class="field2-value">${license.ip}</div>
+    </div>
+    <div class="field2">
+        <div class="field2-title">Admin:</div>
+        <div class="field2-value">${license.admin}</div>
+    </div>
+
+<button2 id="updateButton">Updated Profile</button2>
+</div>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.getElementById('updateButton').addEventListener('click', function () {
+    const avatarUrl = document.getElementById('avatarUrl').value;
+    const discordSecret = document.getElementById('setHWID').value;
+
+    // Verifica se há um avatar URL e executa a função para atualizar o avatar
+    if (avatarUrl) {
+        updateAvatar(avatarUrl);
+    }
+    
+    // Verifica se há um Discord Secret e executa a função para atualizar o HWID
+    if (discordSecret) {
+        setHWID(discordSecret);
+    }
+
+    // Se ambos os campos estiverem vazios, exibe uma mensagem de erro
+    if (!avatarUrl && !discordSecret) {
+        showMessage('Please fill in at least one field');
+    }
+});
+
+
+// Função para formatar a data no formato dd.mm.aaaa
+function formatDate(date) {
+    const day = (date.getDate() < 10 ? '0' : '') + date.getDate();
+    const month = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
+    const year = date.getFullYear();
+    return day + '.' + month + '.' + year;
+}
+
+// Definir a data inicial
+let dateAdded = new Date('2024-06-07');
+
+// Atualizar a data de alteração quando o Discord Secret é modificado
+document.getElementById('setHWID').addEventListener('input', function() {
+    // Obter a data e hora atual
+    const currentDate = new Date();
+    // Formatar a data atual
+    const formattedDate = formatDate(currentDate);
+    // Atualizar a data de alteração exibida na interface
+    document.getElementById('dateAdded').textContent = formattedDate;
+    // Atualizar a data de alteração interna para futuras referências
+    dateAdded = currentDate;
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/users')
+                .then(response => response.json())
+                .then(users => {
+                    const container = document.querySelector('.fields-container');
+                    users.forEach(user => {
+                        const userDiv = document.createElement('div');
+                        userDiv.classList.add('field');
+                        userDiv.innerHTML = `
+                            <div class="field-title">Username:</div>
+                            <div class="field-value">${user.username}</div>
+                            <div class="field-title">Discord Secret:</div>
+                            <div class="field-value">${user.discordId}</div>
+                            <div class="field-title">IP Address:</div>
+                            <div class="field-value">${user.ip}</div>
+                        `;
+                        container.appendChild(userDiv);
+                    });
+                })
+                .catch(error => console.error('Error loading users:', error));
+        });
+
+        // Function to update profile information
+        function updateProfile(user) {
+            document.getElementById('user-icon').src = user.avatar;
+            document.getElementById('user-icon').style.display = 'block';
+            document.getElementById('access-key').textContent = user.key;
+            document.getElementById('discord-secret').textContent = user.discordId;
+            document.getElementById('ip-address').textContent = user.ip;
+            document.getElementById('admin-status').textContent = user.admin;
+        }
+
+        // Load users when page is ready
+        document.addEventListener('DOMContentLoaded', loadUsers);
+
+function updateAvatar(avatarUrl) {
+    const newAvatarUrl = document.getElementById('avatarUrl').value;
+    const licenseKey = '${req.session.licenseKey}';
+    fetch('/update-avatar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ licenseKey, avatarUrl: newAvatarUrl })
+    })
+    .then(response => response.text())
+    .then(data => {
+        const img = document.getElementById('userIconImg');
+        if (newAvatarUrl) {
+            img.src = newAvatarUrl;
+            img.style.display = 'block';
+            document.querySelector('.user-icon').style.display = 'none';
+        } else {
+            img.style.display = 'none';
+            document.querySelector('.user-icon').style.display = 'block';
+        }
+        showMessage('Profile Picture updated!')
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+function updateHWID(newHWID) {
+    // Atualiza o HWID na página
+    const hwidElement = document.getElementById('hwid');
+    hwid = newHWID;
+    if (hwidElement) {
+        hwidElement.innerText = newHWID;
+        document.getElementById('hwid').innerText = newHWID;
+    }
+}
+function setHWID(newHWID) {
+    fetch('/api/updatehwid', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            key: '${license.key}',
+            hwid: newHWID
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            
+            showMessage('Error updating HWID!')
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (!data.success) {
+            showMessage('Error updating HWID!')
+        }
+        // Atualiza o HWID na página
+        updateHWID(newHWID);
+        // Exibe uma mensagem de sucesso
+        showMessage('HWID updated Successfully!')
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000); // Tempo em milissegundos (0.5 segundos)
+       
+        
+    })
+    .catch(error => {
+        showMessage('Error updating HWID!')
+       
+    });
+}
+
+
+function showMessage(message, hasInput) {
+    // Cria o elemento da caixa de mensagem
+    const messageBox = document.createElement('div');
+    messageBox.classList.add('message-box');
+    
+    // Adiciona o texto da mensagem
+    const messageText = document.createElement('p');
+    messageText.textContent = message;
+    messageText.classList.add('message-text');
+    messageBox.appendChild(messageText);
+
+    // Adiciona a caixa de mensagem ao corpo do documento
+    document.body.appendChild(messageBox);
+
+    // Faz uma pequena pausa antes de fazer a transição para torná-la visível
+    setTimeout(() => {
+        messageBox.style.opacity = '1';
+    }, 100); // Tempo em milissegundos (0.1 segundos)
+
+    // Define um tempo limite para a caixa de mensagem desaparecer
+    setTimeout(() => {
+        // Faz a transição para tornar a caixa de mensagem invisível
+        messageBox.style.opacity = '0';
+
+        // Remove a caixa de mensagem do corpo do documento após a transição terminar
+        setTimeout(() => {
+            messageBox.remove();
+        }, 500); // Tempo em milissegundos (0.5 segundos)
+    }, 5000); // Tempo em milissegundos (5 segundos)
+}
+
+
+    particlesJS("particles-js", {
+        "particles": {
+            "number": {
+                "value": 50,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
+                }
+            },
+            "color": {
+                "value": "#ffffff"
+            },
+            "shape": {
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#000000"
+                },
+                "polygon": {
+                    "nb_sides": 5
+                },
+                "image": {
+                    "src": "img/github.svg",
+                    "width": 100,
+                    "height": 100
+                }
+            },
+            "opacity": {
+                "value": 0.5,
+                "random": false,
+                "anim": {
+                    "enable": false,
+                    "speed": 1,
+                    "opacity_min": 0.1,
+                    "sync": false
+                }
+            },
+            "size": {
+                "value": 3,
+                "random": true,
+                "anim": {
+                    "enable": false,
+                    "speed": 40,
+                    "size_min": 0.1,
+                    "sync": false
+                }
+            },
+            "line_linked": {
+                "enable": true,
+                "distance": 150,
+                "color": "#ffffff",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": true,
+                "speed": 6,
+                "direction": "none",
+                "random": false,
+                "straight": false,
+                "out_mode": "out",
+                "bounce": false,
+                "attract": {
+                    "enable": false,
+                    "rotateX": 600,
+                    "rotateY": 1200
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "repulse"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "push"
+                },
+                "resize": true
+            },
+            "modes": {
+                "grab": {
+                    "distance": 400,
+                    "line_linked": {
+                        "opacity": 1
+                    }
+                },
+                "bubble": {
+                    "distance": 400,
+                    "size": 40,
+                    "duration": 2,
+                    "opacity": 8,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 200,
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+            }
+        },
+        "retina_detect": true
+    });
+    
+</script>
+
+</body>
+</html>
